@@ -20,9 +20,9 @@
 </head>
 <body>
   <nav>
-    <a href="index.html">Home</a>
-    <a href="privacy.html">Privacy</a>
-    <a href="features.html">Features</a>
+    <a href="index.php">Home</a>
+    <a href="privacy.php">Privacy</a>
+    <a href="features.php">Features</a>
   </nav>
 
   <h1>uSpotly - Features & Benefits</h1>
