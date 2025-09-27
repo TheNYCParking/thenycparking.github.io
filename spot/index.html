@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>uSpotly – Street Parking Finder NYC</title>
+  <meta name="description" content="Find legal street parking in NYC quickly and easily with uSpotly. Clean, transparent header/footer, free and mobile-friendly.">
+  <meta name="keywords" content="NYC parking, street parking NYC, parking rules NYC, find parking NYC, uSpotly">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#000000"/>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <h1 class="logo"><a href="index.html">uSpotly</a></h1>
+
+      <div class="controls">
+        <input id="searchInput" class="search-input" placeholder="Search address (e.g. Manhattan, NY)" aria-label="Search address"/>
+        <button class="btn" id="searchBtn">Search</button>
+
+        <select id="filterSelect" class="filter-select" aria-label="Filter rules">
+          <option value="all">All rules</option>
+          <option value="NO PARKING">No Parking</option>
+          <option value="NO STANDING">No Standing</option>
+          <option value="METER">Metered</option>
+          <option value="ALT SIDE">Alternate Side</option>
+        </select>
+
+        <button class="btn" onclick="locateUser()">My Location</button>
+        <button class="btn" onclick="showNearest()">Nearest Parking</button>
+        <button class="btn" id="reportBtn">Report Spot</button>
+        <button class="btn" id="themeToggle">Dark</button>
+      </div>
+    </div>
+  </header>
+
+  <div id="map" aria-label="Map"></div>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-text">&copy; 2025 Street Parking Finder NYC – uSpotly</div>
+      <div class="small-links">
+        <a href="features.html">Features</a> · <a href="privacy.html">Privacy</a> · <a href="donation.html">Donate</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
