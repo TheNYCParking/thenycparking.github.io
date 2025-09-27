@@ -59,6 +59,7 @@ nav {
 }
 
 .btn {
+  font-family: "Orbitron", sans-serif;
   padding: 8px 14px;
   font-size: 14px;
   font-weight: 600;
@@ -89,7 +90,7 @@ footer {
 
 .footer-text {
   display: inline-block;
-  font-size: 12px;
+  font-size: 10px;
   color: #fff;
   background: rgba(0, 0, 0, 0.8); /* hitam 80% */
   padding: 4px 10px;
