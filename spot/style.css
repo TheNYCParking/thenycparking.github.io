@@ -72,6 +72,7 @@ nav {
 }
 
 .btn:hover {
+  font-family: "Orbitron", sans-serif;
   background: rgba(0, 0, 0, 1);
   transform: translateY(-1px);
 }
