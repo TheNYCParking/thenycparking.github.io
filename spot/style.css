@@ -20,9 +20,10 @@ html, body {
   position: absolute;
   top: 0;
   left: 0;
+  z-index: 1;
 }
 
-/* Header transparan */
+/* ---------------- HEADER ---------------- */
 header {
   position: absolute;
   top: 0;
@@ -44,6 +45,11 @@ header h1 a {
   background: rgba(255, 255, 255, 0.85);
   padding: 6px 10px;
   border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+header h1 a:hover {
+  background: rgba(255, 255, 255, 1);
 }
 
 /* Navigation buttons */
@@ -61,14 +67,15 @@ nav {
   cursor: pointer;
   background: rgba(0, 0, 0, 0.8); /* hitam 80% */
   color: #fff;
-  transition: opacity 0.2s ease;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .btn:hover {
-  opacity: 0.9;
+  background: rgba(0, 0, 0, 1);
+  transform: translateY(-1px);
 }
 
-/* Footer transparan */
+/* ---------------- FOOTER ---------------- */
 footer {
   position: absolute;
   bottom: 0;
@@ -87,4 +94,28 @@ footer {
   background: rgba(0, 0, 0, 0.8); /* hitam 80% */
   padding: 4px 10px;
   border-radius: 6px;
+}
+
+/* ---------------- RESPONSIVE ---------------- */
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  nav {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .btn {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+
+  footer .footer-text {
+    font-size: 11px;
+    padding: 3px 8px;
+  }
 }
