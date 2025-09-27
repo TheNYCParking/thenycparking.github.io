@@ -59,7 +59,6 @@ nav { display:flex; gap:10px; flex-wrap:wrap; }
   border:none; padding:6px 12px; border-radius:10px;
   font-size:0.9rem; font-weight:600; cursor:pointer;
   box-shadow:0 0 6px rgba(0,0,0,0.4);
-  transition:transform 0.2s, box-shadow 0.2s;
 }
 .btn:hover {
   transform:scale(1.05);
@@ -80,9 +79,10 @@ footer {
 .footer-text {
   display:inline-block; padding:3px 10px;
   border-radius:10px;
-  color:#0ff; background:#000; /* solid hitam dengan teks biru neon */
+  color:#0ff; background:#000 rgba(0,0,0,0.8); /* solid hitam dengan teks biru neon */
   text-shadow:0 0 6px #0ff;
 }
+
 
 
 
