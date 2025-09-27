@@ -32,7 +32,7 @@ header nav {
 }
 
 header nav button {
-  background: rgba(0, 224, 255, 0.15); /* biru futuristik, lebih ringan */
+  background: rgba(0, 4, 5, 0.15); /* biru futuristik, lebih ringan */
   color: #00e0ff;
   border: 1px solid rgba(0,224,255,0.4);
   border-radius: 8px;
@@ -44,7 +44,7 @@ header nav button {
 }
 
 header nav button:hover {
-  background: rgba(0, 224, 255, 0.3);
+  background: rgba(0, 4, 5, 0.3);
   box-shadow: 0 0 10px rgba(0,224,255,0.6);
 }
 header h1 a {
@@ -89,3 +89,4 @@ footer .footer-text {
   border-radius: 10px;
   display: inline-block;
 }
+
