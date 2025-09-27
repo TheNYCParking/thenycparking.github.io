@@ -10,7 +10,18 @@ header {
   position:fixed; top:0; left:0; width:100%;
   display:flex; justify-content:space-between; align-items:center;
   padding:12px 20px; z-index:1000;
-  background:transparent;   /* full transparan */
+  background:transparent;
+  box-sizing:border-box;
+}
+
+/* Tambah container agar isi tidak terlalu ke kanan */
+header nav {
+  display:flex; gap:10px; flex-wrap:wrap;
+  margin-right: 20px;   /* kasih jarak dari tepi kanan */
+}
+
+header h1 {
+  margin-left: 10px;    /* biar logo juga ada jarak dari kiri */
 }
 
 header h1 a {
@@ -51,4 +62,5 @@ footer {
   color:#0ff; background:#000; /* solid hitam dengan teks biru neon */
   text-shadow:0 0 6px #0ff;
 }
+
 
