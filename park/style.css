@@ -32,7 +32,7 @@ header nav {
 }
 
 header nav button {
-  background: rgba(0, 0, 0, 0.4); /* 80% solid, masih ada sedikit transparan */
+  background: rgba(0,0,0,1); /* 80% solid, masih ada sedikit transparan */
   color: #fff;
   border: none;
   border-radius: 6px;
@@ -40,7 +40,7 @@ header nav button {
   cursor: pointer;
   font-size: 0.85rem;
   font-weight: 600;
-  text-shadow: 0 0 3px rgba(0,0,0,0.1);
+  text-shadow: 0 0 3px rgba(0,0,0,1);
 }
 
 /* FOOTER */
@@ -66,4 +66,5 @@ footer .footer-text {
 
 /* MAP */
 #map { width:100%; height:100vh; }
+
 
