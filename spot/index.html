@@ -4,46 +4,35 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>uSpotly – Street Parking Finder NYC</title>
-  <meta name="description" content="Find legal street parking in NYC quickly and easily with uSpotly. Clean, transparent header/footer, free and mobile-friendly.">
+  <meta name="description" content="Find legal street parking in NYC quickly and easily with uSpotly. Free, clean, mobile-friendly and offline-ready.">
   <meta name="keywords" content="NYC parking, street parking NYC, parking rules NYC, find parking NYC, uSpotly">
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#000000"/>
+  <meta name="theme-color" content="#0ff"/>
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
+  <!-- Header transparan -->
   <header>
-    <div class="header-inner">
-      <h1 class="logo"><a href="index.html">uSpotly</a></h1>
-
-      <div class="controls">
-        <input id="searchInput" class="search-input" placeholder="Search address (e.g. Manhattan, NY)" aria-label="Search address"/>
-        <button class="btn" id="searchBtn">Search</button>
-
-        <select id="filterSelect" class="filter-select" aria-label="Filter rules">
-          <option value="all">All rules</option>
-          <option value="NO PARKING">No Parking</option>
-          <option value="NO STANDING">No Standing</option>
-          <option value="METER">Metered</option>
-          <option value="ALT SIDE">Alternate Side</option>
-        </select>
-
-        <button class="btn" onclick="locateUser()" alt="My Location">POSITION</button>
-        <button class="btn" onclick="showNearest()" alt="Nearest Parking">VACANCY</button>
-        <button class="btn" id="reportBtn" alt="Markspot">MARKSPOT</button>
-        <button class="btn" onclick="window.location.href='donation.html'" alt="Donate for Us">DONATE</button>
-      </div>
-    </div>
+    <h1><a href="index.html">uSpotly</a></h1>
+    <nav>
+      <button class="btn" onclick="locateUser()" alt="My Location">POSITION</button>
+      <button class="btn" onclick="showNearest()" alt="Nearest Parking">VACATION</button>
+      <button class="btn" onclick="window.location.href='donation.html'">DONATION</button>
+    </nav>
   </header>
 
-  <div id="map" aria-label="Map"></div>
+  <!-- Map full screen -->
+  <div id="map"></div>
 
+  <!-- Footer transparan -->
   <footer>
-    <div class="footer-inner">
-      <div class="footer-text">&copy; 2025 Street Parking Finder NYC – uSpotly</div>
+    <div class="footer-text">
+      &copy; 2025 uSpotly – Street Parking Finder NYC. 100% Free for everyone.
     </div>
   </footer>
 
+  <!-- Scripts -->
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="app.js"></script>
 </body>
