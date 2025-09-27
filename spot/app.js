@@ -1,110 +1,119 @@
 // app.js - uSpotly enhanced functions (based on uSpotly original code)
 
 // --- Map init (USA/NYC) ---
-const map = L.map('map').setView([40.7128, -74.0060], 14); // default Manhattan
+// Inisialisasi Map
+const map = L.map('map').setView([40.7128, -74.0060], 14); // default NYC
+
+// Tile layer OSM
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  maxZoom: 19
+  maxZoom: 20,
+  attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
 }).addTo(map);
 
-let userMarker, nearestMarker, parkingLayer;
+// Layer group untuk marker parkir (biar gampang di-reset)
+const parkingLayer = L.layerGroup().addTo(map);
 
-// Socrata API
-const API_URL = "https://data.cityofnewyork.us/resource/nfid-uabd.json";
-const APP_TOKEN = "ccstf8bnlrcg3y4wtjvpbbmzb"; // dari kamu
-const FETCH_LIMIT = 1000;
-
-// --- Utility: ambil data sesuai bounding box layar ---
-async function fetchParkingData(bounds) {
-  const { _southWest, _northEast } = bounds;
-  const where = `within_box(location, ${_northEast.lat}, ${_southWest.lng}, ${_southWest.lat}, ${_northEast.lng})`;
-
-  const url = `${API_URL}?$limit=${FETCH_LIMIT}&$where=${where}`;
-  const res = await fetch(url, {
-    headers: { "X-App-Token": APP_TOKEN }
-  });
-  return res.json();
+// Fungsi ambil bounding box dari map
+function getBBox(map) {
+  const bounds = map.getBounds();
+  // format Socrata within_box(lat, lon, top, left, bottom, right)
+  return `?$where=within_box(location, ${bounds.getNorth()}, ${bounds.getWest()}, ${bounds.getSouth()}, ${bounds.getEast()})`;
 }
 
-// --- Tampilkan regulasi parkir dalam layar map ---
-async function showParkingInView() {
+// Fungsi load data parkir NYC sesuai bounding box
+async function loadParking() {
+  const baseUrl = "https://data.cityofnewyork.us/resource/wya8-wim2.json";
+  const bbox = getBBox(map);
+  const url = `${baseUrl}${bbox}&$limit=1000`; // max 1000 per call
+
   try {
-    if (parkingLayer) map.removeLayer(parkingLayer);
-    const data = await fetchParkingData(map.getBounds());
+    const response = await fetch(url, {
+      headers: {
+        "X-App-Token": "ccstf8bnlrcg3y4wtjvpbbmzb" // token kamu
+      }
+    });
+    const data = await response.json();
 
-    parkingLayer = L.layerGroup();
+    // clear layer dulu sebelum nambah marker baru
+    parkingLayer.clearLayers();
+
+    // looping dataset
     data.forEach(item => {
-      if (item.latitude && item.longitude) {
-        const lat = parseFloat(item.latitude);
-        const lng = parseFloat(item.longitude);
-        const desc = item.sign_description || "No info";
+      let lat = null, lon = null;
 
-        const marker = L.circleMarker([lat, lng], {
-          radius: 6,
-          color: "#ff8800",
-          fillColor: "#ff8800",
-          fillOpacity: 0.7
-        }).bindPopup(`🚗 Rule: ${desc}`);
-        parkingLayer.addLayer(marker);
+      // beberapa dataset pakai "latitude"/"longitude", ada juga "location" object
+      if (item.latitude && item.longitude) {
+        lat = parseFloat(item.latitude);
+        lon = parseFloat(item.longitude);
+      } else if (item.location && item.location.coordinates) {
+        // Socrata GeoJSON → coordinates = [lon, lat]
+        lon = item.location.coordinates[0];
+        lat = item.location.coordinates[1];
+      }
+
+      if (lat && lon) {
+        L.marker([lat, lon])
+          .addTo(parkingLayer)
+          .bindPopup(`
+            <b>${item.name || "Parking Spot"}</b><br>
+            ${item.address || "No address available"}
+          `);
       }
     });
 
-    parkingLayer.addTo(map);
+    console.log(`Loaded ${data.length} parking spots for current view`);
+
   } catch (err) {
-    console.error("⚠️ Fetch error:", err);
+    console.error("Error fetching parking data:", err);
   }
 }
 
-// --- Geolocation: deteksi user ---
+// Load pertama kali saat map dibuka
+map.whenReady(() => {
+  loadParking();
+});
+
+// Reload data tiap kali user geser / zoom map
+map.on("moveend", () => {
+  loadParking();
+});
+
+// --- My Location button ---
 function locateUser() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(pos => {
-      const { latitude, longitude } = pos.coords;
-      if (userMarker) map.removeLayer(userMarker);
-
-      userMarker = L.circleMarker([latitude, longitude], {
-        radius: 10,
-        color: '#0ff',
-        fillColor: '#0ff',
-        fillOpacity: 0.8
-      }).addTo(map).bindPopup("📍 You are here").openPopup();
-
-      map.setView([latitude, longitude], 16);
-      showNearest(); // otomatis tunjukkan parkir terdekat
-    }, err => alert("❌ Location error: " + err.message));
+  if (!navigator.geolocation) {
+    alert("Geolocation is not supported by your browser");
+    return;
   }
-}
 
-// --- Cari parkir terdekat dari user ---
-async function showNearest() {
-  if (!userMarker) { alert("Enable My Location first."); return; }
-  const userLatLng = userMarker.getLatLng();
-  try {
-    const data = await fetchParkingData(map.getBounds());
-    let nearest = null, minDist = Infinity;
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      const lat = pos.coords.latitude;
+      const lon = pos.coords.longitude;
 
-    data.forEach(item => {
-      if (item.latitude && item.longitude) {
-        const lat = parseFloat(item.latitude), lng = parseFloat(item.longitude);
-        const dist = userLatLng.distanceTo([lat, lng]);
-        if (dist < minDist) {
-          nearest = { lat, lng, rule: item.sign_description };
-          minDist = dist;
-        }
-      }
-    });
+      // Tambahkan marker "You are here"
+      L.marker([lat, lon], { icon: L.icon({
+        iconUrl: "https://cdn-icons-png.flaticon.com/512/684/684908.png",
+        iconSize: [32, 32]
+      }) })
+        .addTo(map)
+        .bindPopup("You are here")
+        .openPopup();
 
-    if (nearest) {
-      if (nearestMarker) map.removeLayer(nearestMarker);
-      nearestMarker = L.circleMarker([nearest.lat, nearest.lng], {
-        radius: 10, color: '#f00', fillColor: '#f00', fillOpacity: 0.8
-      }).addTo(map).bindPopup(`🚗 Rule: ${nearest.rule}`).openPopup();
-      map.setView([nearest.lat, nearest.lng], 17);
+      // Geser map ke posisi user
+      map.setView([lat, lon], 16);
+    },
+    (err) => {
+      console.error("Geolocation error:", err);
+      alert("Tidak bisa mendeteksi lokasi kamu");
     }
-  } catch (e) { alert("⚠️ Data fetch error"); }
+  );
 }
 
-// --- Event: update data saat map digerakkan ---
-map.on("moveend", showParkingInView);
-
-// --- Load pertama kali (NYC + regulasi default) ---
-showParkingInView();
+// Tombol header
+document.getElementById("btn-position").addEventListener("click", locateUser);
+document.getElementById("btn-vacation").addEventListener("click", () => {
+  alert("Vacation mode belum diimplementasikan 🚧");
+});
+document.getElementById("btn-donation").addEventListener("click", () => {
+  window.open("https://buymeacoffee.com", "_blank");
+});
