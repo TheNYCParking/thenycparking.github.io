@@ -95,49 +95,27 @@ footer {
 
 /* ==================== MAP MARKER STYLE ==================== */
 
-/* Marker popup */
-.leaflet-popup-content {
-  font-size: 14px;
-  line-height: 1.4;
+/* Parking marker classes */
+.marker-allowed { stroke: #005500 !important; fill: #00c853 !important; fill-opacity: 0.95 !important; }
+.marker-restricted { stroke: #550000 !important; fill: #ff1744 !important; fill-opacity: 0.95 !important; }
+.marker-user { stroke: #8a6d00 !important; fill: #ffeb3b !important; fill-opacity: 1 !important; }
+.marker-nearest { stroke: #0033cc !important; fill: #2979ff !important; fill-opacity: 1 !important; }
+
+/* Pulse animation for nearest marker (scale SVG circle) */
+.marker-nearest { transform-origin: center center; animation: uspotly-pulse 1.2s ease-out infinite; }
+@keyframes uspotly-pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.35); opacity: 0.85; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Popup styling (improve contrast) */
+.leaflet-popup-content-wrapper {
+  background: #ffffff;
   color: #111;
-  font-weight: 500;
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.15);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
 }
-
-/* Popup title (bold, lebih jelas) */
-.leaflet-popup-content b {
-  color: #000;
-  font-size: 15px;
-}
-
-/* Customize circle marker via CSS variables (optional) */
-.marker-allowed {
-  stroke: #00c853 !important;
-  fill: #00e676 !important;
-  fill-opacity: 0.9 !important;
-}
-
-.marker-restricted {
-  stroke: #f00 !important;
-  fill: #ff1744 !important;
-  fill-opacity: 0.9 !important;
-}
-
-.marker-user {
-  stroke: #ffeb3b !important;
-  fill: #ffeb3b !important;
-  fill-opacity: 0.9 !important;
-}
-
-.marker-nearest {
-  stroke: #2196f3 !important;
-  fill: #2962ff !important;
-  fill-opacity: 0.95 !important;
-  animation: pulse 1.5s infinite;
-}
-
-/* Pulse animasi untuk nearest */
-@keyframes pulse {
-  0% { r: 10; fill-opacity: 0.6; }
-  50% { r: 14; fill-opacity: 1; }
-  100% { r: 10; fill-opacity: 0.6; }
-}
+.leaflet-popup-content { font-size: 14px; line-height: 1.35; }
+.leaflet-popup-tip { background: #fff; border-top: 1px solid rgba(0,0,0,0.08); }
