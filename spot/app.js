@@ -1,84 +1,120 @@
-// app.js
-
-// Inisialisasi peta
-const map = L.map('map').setView([40.7128, -74.0060], 14);
-
-// Tile OSM
+// === INIT MAP ===
+const map = L.map('map').setView([40.7128, -74.0060], 13); // Default NYC
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '&copy; OpenStreetMap contributors'
+  maxZoom: 19
 }).addTo(map);
 
-// Marker Layer Group untuk parkir
-const parkingLayer = L.layerGroup().addTo(map);
+let userLatLng = null;
+let userMarker = null;
+let userCircle = null;
+let parkingMarkers = [];
 
-// Ikon custom 🚫 dan 🅿️
-const noParkingIcon = L.divIcon({
-  className: 'custom-icon',
-  html: '🚫',
-  iconSize: [24, 24],
-  iconAnchor: [12, 12]
-});
-
-const yesParkingIcon = L.divIcon({
-  className: 'custom-icon',
-  html: '🅿️',
-  iconSize: [24, 24],
-  iconAnchor: [12, 12]
-});
-
-// API Socrata
-const API_URL = "https://data.cityofnewyork.us/resource/nc67-uf89.json";
-const APP_TOKEN = "ccstf8bnlrcg3y4wtjvpbbmzb"; // token dari akunmu
-
-// Fungsi ambil data sesuai bounding box
+// === Load Parking Data (NYC Open Data) ===
 async function loadParkingData() {
-  parkingLayer.clearLayers();
-
   const bounds = map.getBounds();
   const sw = bounds.getSouthWest();
   const ne = bounds.getNorthEast();
 
-  const query = `$where=latitude between ${sw.lat} and ${ne.lat} AND longitude between ${sw.lng} and ${ne.lng} LIMIT 500`;
+  const url = `https://data.cityofnewyork.us/resource/dv6r-f4he.json?$limit=200&$where=latitude between ${sw.lat} and ${ne.lat} AND longitude between ${sw.lng} and ${ne.lng}`;
 
   try {
-    const response = await fetch(`${API_URL}?${query}`, {
-      headers: { "X-App-Token": APP_TOKEN }
-    });
-    const data = await response.json();
+    const res = await fetch(url);
+    const data = await res.json();
 
-    if (data.length === 0) {
-      console.log("Tidak ada data parkir di area ini.");
-      return;
-    }
+    // Bersihkan marker lama
+    parkingMarkers.forEach(m => map.removeLayer(m));
+    parkingMarkers = [];
 
+    // Tambahkan marker baru
     data.forEach(item => {
-      if (!item.latitude || !item.longitude) return;
+      if (item.latitude && item.longitude) {
+        const lat = parseFloat(item.latitude);
+        const lng = parseFloat(item.longitude);
 
-      // Deteksi apakah aturan = no parking atau bisa parkir
-      const rule = (item.rule || "").toLowerCase();
-      const isNoParking = rule.includes("no parking") || rule.includes("no standing");
+        const marker = L.circleMarker([lat, lng], {
+          radius: 6,
+          color: '#ff6600',
+          fillColor: '#ff6600',
+          fillOpacity: 0.8
+        }).addTo(map).bindPopup(`🚗 Rule: ${item.sign_description || "Parking Rule"}`);
 
-      const marker = L.marker([item.latitude, item.longitude], {
-        icon: isNoParking ? noParkingIcon : yesParkingIcon
-      }).bindPopup(`
-        <b>${isNoParking ? "🚫 No Parking" : "🅿️ Parking Allowed"}</b><br/>
-        Rule: ${item.rule || "N/A"}<br/>
-        Street: ${item.main_street || "Unknown"}<br/>
-        From: ${item.from_street || "-"}<br/>
-        To: ${item.to_street || "-"}
-      `);
-
-      parkingLayer.addLayer(marker);
+        parkingMarkers.push(marker);
+      }
     });
-
-    console.log(`Loaded ${data.length} parking records.`);
-  } catch (err) {
-    console.error("Error loading parking data:", err);
+  } catch (e) {
+    console.error("⚠️ Parking data error:", e);
   }
 }
 
-// Muat data pertama kali
+// Panggil saat awal dan setiap view map berubah
+map.on("moveend", loadParkingData);
 loadParkingData();
 
-// Update data saat map digeser/zoom
-map.on('moveend', loadParkingData);
+
+// === My Location (Position Button) ===
+document.getElementById("btn-position").addEventListener("click", () => {
+  if (navigator.geolocation) {
+    map.locate({ setView: true, maxZoom: 17 });
+  } else {
+    alert("❌ Geolocation tidak didukung browser ini.");
+  }
+});
+
+map.on("locationfound", (e) => {
+  userLatLng = e.latlng;
+  const radius = e.accuracy / 2;
+
+  if (userMarker) {
+    map.removeLayer(userMarker);
+    map.removeLayer(userCircle);
+  }
+
+  userMarker = L.marker(userLatLng).addTo(map)
+    .bindPopup("📍 You are here").openPopup();
+  userCircle = L.circle(userLatLng, radius).addTo(map);
+});
+
+map.on("locationerror", () => {
+  alert("⚠️ Tidak bisa mendapatkan lokasi Anda. Aktifkan GPS & izinkan browser.");
+});
+
+
+// === Nearest Parking (Vacation Button) ===
+document.getElementById("btn-vacation").addEventListener("click", () => {
+  if (!userLatLng) {
+    alert("Klik 'My Location' dulu supaya kita tahu posisi Anda.");
+    return;
+  }
+
+  if (parkingMarkers.length === 0) {
+    alert("⚠️ Data parkir belum tersedia.");
+    return;
+  }
+
+  let nearestMarker = null;
+  let nearestDistance = Infinity;
+
+  parkingMarkers.forEach(marker => {
+    const dist = map.distance(userLatLng, marker.getLatLng());
+    if (dist < nearestDistance) {
+      nearestDistance = dist;
+      nearestMarker = marker;
+    }
+  });
+
+  if (nearestMarker) {
+    map.setView(nearestMarker.getLatLng(), 18);
+    nearestMarker.openPopup();
+  } else {
+    alert("🚫 Tidak ada parkir terdekat ditemukan.");
+  }
+});
+
+
+// === Theme Toggle (optional if ada button theme) ===
+const themeBtn = document.getElementById("themeToggle");
+if (themeBtn) {
+  themeBtn.addEventListener("click", () => {
+    document.body.classList.toggle("dark");
+  });
+}
