@@ -92,3 +92,52 @@ footer {
   padding: 4px 10px;
   border-radius: 6px;
 }
+
+/* ==================== MAP MARKER STYLE ==================== */
+
+/* Marker popup */
+.leaflet-popup-content {
+  font-size: 14px;
+  line-height: 1.4;
+  color: #111;
+  font-weight: 500;
+}
+
+/* Popup title (bold, lebih jelas) */
+.leaflet-popup-content b {
+  color: #000;
+  font-size: 15px;
+}
+
+/* Customize circle marker via CSS variables (optional) */
+.marker-allowed {
+  stroke: #00c853 !important;
+  fill: #00e676 !important;
+  fill-opacity: 0.9 !important;
+}
+
+.marker-restricted {
+  stroke: #f00 !important;
+  fill: #ff1744 !important;
+  fill-opacity: 0.9 !important;
+}
+
+.marker-user {
+  stroke: #ffeb3b !important;
+  fill: #ffeb3b !important;
+  fill-opacity: 0.9 !important;
+}
+
+.marker-nearest {
+  stroke: #2196f3 !important;
+  fill: #2962ff !important;
+  fill-opacity: 0.95 !important;
+  animation: pulse 1.5s infinite;
+}
+
+/* Pulse animasi untuk nearest */
+@keyframes pulse {
+  0% { r: 10; fill-opacity: 0.6; }
+  50% { r: 14; fill-opacity: 1; }
+  100% { r: 10; fill-opacity: 0.6; }
+}
