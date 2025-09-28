@@ -4,7 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>uSpotly – Street Parking Finder NYC</title>
-  <meta name="description" content="Find legal street parking in NYC quickly and easily with uSpotly. Free, clean, mobile-friendly and offline-ready.">
+  <meta name="description" content="Find legal street parking in NYC quickly and easily with uSpotly. Clean, modern, and mobile-friendly microsite.">
   <meta name="keywords" content="NYC parking, street parking NYC, parking rules NYC, find parking NYC, uSpotly">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0ff"/>
@@ -12,24 +12,22 @@
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <!-- Header transparan -->
+  <!-- Header -->
   <header>
-    <h1><a href=".">uSpotly</a></h1>
+    <h1><a href="index.html">uSpotly</a></h1>
     <nav>
-      <button class="btn-position" onclick="locateUser()" alt="My Location">POSITION</button>
-      <button class="btn-vacation" onclick="showNearest()" alt="Nearest Parking">VACATION</button>
-      <button class="btn" onclick="window.location.href='donation.html'">DONATION</button>
+      <button class="btn" onclick="locateUser()">My Location</button>
+      <button class="btn" onclick="showNearest()">Nearest Parking</button>
+      <button class="btn" onclick="window.location.href='privacy.html'">Donation</button>
     </nav>
   </header>
 
-  <!-- Map full screen -->
+  <!-- Map -->
   <div id="map"></div>
 
-  <!-- Footer transparan -->
+  <!-- Footer -->
   <footer>
-    <div class="footer-text">
-      &copy; 2025 uSpotly – Street Parking Finder NYC. 100% Free for Everyone.
-    </div>
+    <div class="footer-text">&copy; 2025 uSpotly – Street Parking Finder NYC</div>
   </footer>
 
   <!-- Scripts -->
