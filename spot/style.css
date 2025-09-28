@@ -20,11 +20,11 @@ html, body {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 1;
 }
 
 /* Header transparan */
 header {
+  font-family: "Orbitron", sans-serif;
   position: absolute;
   top: 0;
   left: 0;
@@ -38,17 +38,19 @@ header {
 }
 
 header h1 a {
-  font-size: 34px;
+  font-family: "Orbitron", sans-serif;
+  font-size: 35px;
   font-weight: 700;
   text-decoration: none;
   color: #111;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.9);
   padding: 6px 10px;
   border-radius: 8px;
 }
 
 /* Navigation buttons */
 nav {
+  font-family: "Orbitron", sans-serif;
   display: flex;
   gap: 10px;
 }
@@ -61,14 +63,12 @@ nav {
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.8); /* hitam 80% */
   color: #fff;
-  transition: opacity 0.2s ease;
 }
 
 .btn:hover {
-  font-family: "Orbitron", sans-serif;
-  opacity: 0.9;
+  background: rgba(0, 0, 0, 1);
 }
 
 /* Footer transparan */
@@ -84,42 +84,11 @@ footer {
 }
 
 .footer-text {
+  font-family: "Orbitron", sans-serif;
   display: inline-block;
-  font-size: 10px;
+  font-size: 11px;
   color: #fff;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.8); /* hitam 80% */
   padding: 4px 10px;
   border-radius: 6px;
-}
-
-/* Custom marker emoji */
-.custom-icon {
-  font-size: 22px;
-  text-align: center;
-  line-height: 22px;
-}
-
-/* Popup styling */
-.leaflet-popup-content-wrapper {
-  background: #fff;
-  color: #111;
-  border-radius: 6px;
-  border: 1px solid #333;
-  box-shadow: 0px 2px 6px rgba(0,0,0,0.3);
-}
-
-.leaflet-popup-content {
-  font-size: 14px;
-  line-height: 1.4;
-}
-
-.leaflet-popup-tip {
-  background: #fff;
-  border: 1px solid #333;
-}
-
-/* Logo */
-header h1 img {
-  max-height: 28px;
-  vertical-align: middle;
 }
